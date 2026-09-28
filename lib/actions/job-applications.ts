@@ -116,6 +116,8 @@ export async function updateJobApplication(
     return { error: "Unauthorized" };
   }
 
+  await connectDB();
+
   const jobApplication = await JobApplication.findById(id);
 
   if (!jobApplication) {
@@ -148,6 +150,14 @@ export async function updateJobApplication(
     newColumnId && newColumnId !== currentColumnId;
 
   if (isMovingToDifferentColumn) {
+    const targetColumn = await Column.findOne({
+      _id: newColumnId,
+      boardId: jobApplication.boardId,
+    });
+    if (!targetColumn) {
+      return { error: "Column not found" };
+    }
+
     await Column.findByIdAndUpdate(currentColumnId, {
       $pull: { jobApplications: id },
     });
@@ -241,6 +251,8 @@ export async function deleteJobApplication(id: string) {
   if (!session?.user) {
     return { error: "Unauthorized" };
   }
+
+  await connectDB();
 
   const jobApplication = await JobApplication.findById(id);
 

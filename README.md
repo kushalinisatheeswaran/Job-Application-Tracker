@@ -13,7 +13,7 @@ UI Components: Radix UI
 Icons: Lucide React
 🚀 Getting Started
 Prerequisites
-Node.js 18+ installed
+Node.js 24.x installed (use the same version on Vercel)
 MongoDB database (local or cloud)
 npm, yarn, pnpm, or bun
 Installation
@@ -24,6 +24,22 @@ Install dependencies:
 npm install
 Create a .env.local file in the root directory:
 MONGODB_URI=your_mongodb_connection_string
+BETTER_AUTH_SECRET=your_random_secret_at_least_32_characters
+BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
+
+For Vercel, set both URL variables to the exact HTTPS production origin
+(e.g. https://your-project.vercel.app), without /api/auth or a trailing slash.
+BETTER_AUTH_URL is automatically trusted by Better Auth; no OAuth provider
+callback is needed for the existing email/password authentication.
+Generate a secret locally with: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+Never commit .env.local or put MongoDB credentials/auth secrets in NEXT_PUBLIC_ variables.
+Set the MongoDB URI database path to your existing application database. Better Auth
+continues to use the existing job-board database; grant the database user access to
+both if application data is stored in a different database.
+Vercel settings: Next.js, root ./, npm install, npm run build, default output, Node.js 24.x.
+After changing the production domain, update both URL variables and redeploy.
+NEXT_PUBLIC_BETTER_AUTH_URL is embedded at build time, so a rebuild is required.
 Run the development server:
 npm run dev
 Open http://localhost:3000 in your browser.

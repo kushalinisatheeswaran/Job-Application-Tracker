@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Board, Column, JobApplication } from "../models/models.types";
 import { updateJobApplication } from "../actions/job-applications";
 
@@ -9,12 +9,11 @@ export function useBoard(initialBoard?: Board | null) {
   const [columns, setColumns] = useState<Column[]>(initialBoard?.columns || []);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (initialBoard) {
-      setBoard(initialBoard);
-      setColumns(initialBoard.columns || []);
-    }
-  }, [initialBoard]);
+  // Reset optimistic state only when a fresh server board arrives.
+  if (initialBoard && initialBoard !== board) {
+    setBoard(initialBoard);
+    setColumns(initialBoard.columns || []);
+  }
 
   async function moveJob(
     jobApplicationId: string,

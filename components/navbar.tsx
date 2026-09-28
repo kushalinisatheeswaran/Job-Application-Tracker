@@ -3,10 +3,8 @@
 import { Briefcase } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { getSession } from "@/lib/auth/auth";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "./ui/avatar";
-import { sign } from "crypto";
 import { signOut, useSession } from "@/lib/auth/auth-client";
 import SignOutButton from "./sign-out-btn";
 

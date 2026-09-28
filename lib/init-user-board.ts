@@ -26,7 +26,7 @@ export async function initializeUserBoard(userId:string){
         const board =await Board.create({
             name:"Job Hunt",
             userId,
-            columns:[],
+            coulmns:[],
         });
 
         const columns = await Promise.all(Default_COLUMNS.map((col)=>Column.create({
@@ -37,7 +37,7 @@ export async function initializeUserBoard(userId:string){
         })));
 
         //update the board with the new column ids
-        board.columns = columns.map((col)=>col._id);
+        board.coulmns = columns.map((col)=>col._id);
         await board.save();
 
         return board;

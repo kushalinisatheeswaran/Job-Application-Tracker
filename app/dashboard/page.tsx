@@ -15,7 +15,7 @@ async function getBoard(userId: string) {
     userId: userId,
     name: "Job Hunt",
   }).populate({
-    path: "columns",
+    path: "coulmns",
     populate: {
       path: "jobApplications",
     },
@@ -25,16 +25,17 @@ async function getBoard(userId: string) {
 
   const board = JSON.parse(JSON.stringify(boardDoc));
 
-  return board;
+  return { ...board, columns: board.coulmns };
 }
 
 async function DashboardPage() {
   const session = await getSession();
-  const board = await getBoard(session?.user.id ?? "");
 
   if (!session?.user) {
     redirect("/sign-in");
   }
+
+  const board = await getBoard(session.user.id);
 
   return (
     <div className="min-h-screen bg-white">

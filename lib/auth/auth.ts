@@ -1,19 +1,29 @@
+import "server-only";
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
-import { redirect } from "next/dist/client/components/navigation";
-import { initialize } from "next/dist/server/lib/render-server";
+import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { initializeUserBoard } from "../init-user-board";
 
-const client = new MongoClient(process.env.MONGODB_URI!, {
+const mongodbUri = process.env.MONGODB_URI;
+if (!mongodbUri) {
+    throw new Error("Please define the MONGODB_URI environment variable");
+}
+
+declare global {
+    var authMongoClient: MongoClient | undefined;
+}
+
+const client = global.authMongoClient ?? new MongoClient(mongodbUri, {
   tls: true,
 });
-  console.log("MONGODB_URI:", process.env.MONGODB_URI);
-// await client.connect(); 
+global.authMongoClient = client;
 const db =client.db("job-board");
 
 export const auth = betterAuth({
+    baseURL: process.env.BETTER_AUTH_URL,
+    secret: process.env.BETTER_AUTH_SECRET,
     database: mongodbAdapter(db,{
         client,
     }),
@@ -27,7 +37,7 @@ export const auth = betterAuth({
     emailAndPassword:{
         enabled:true,
     },
-    databseHooks:{
+    databaseHooks:{
         user:{
             create:{
                 after : async(user) =>{
