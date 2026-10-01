@@ -7,7 +7,7 @@ import { updateJobApplication } from "../actions/job-applications";
 export function useBoard(initialBoard?: Board | null) {
   const [board, setBoard] = useState<Board | null>(initialBoard || null);
   const [columns, setColumns] = useState<Column[]>(initialBoard?.columns || []);
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
 
   // Reset optimistic state only when a fresh server board arrives.
   if (initialBoard && initialBoard !== board) {
@@ -18,7 +18,7 @@ export function useBoard(initialBoard?: Board | null) {
   async function moveJob(
     jobApplicationId: string,
     newColumnId: string,
-    newOrder: number
+    newOrder: number,
   ) {
     setColumns((prev) => {
       const newColumns = prev.map((col) => ({
@@ -33,13 +33,13 @@ export function useBoard(initialBoard?: Board | null) {
 
       for (const col of newColumns) {
         const jobIndex = col.jobApplications.findIndex(
-          (j) => j._id === jobApplicationId
+          (j) => j._id === jobApplicationId,
         );
         if (jobIndex !== -1 && jobIndex !== undefined) {
           jobToMove = col.jobApplications[jobIndex];
           oldColumnId = col._id;
           col.jobApplications = col.jobApplications.filter(
-            (job) => job._id !== jobApplicationId
+            (job) => job._id !== jobApplicationId,
           );
           break;
         }
@@ -47,7 +47,7 @@ export function useBoard(initialBoard?: Board | null) {
 
       if (jobToMove && oldColumnId) {
         const targetColumnIndex = newColumns.findIndex(
-          (col) => col._id === newColumnId
+          (col) => col._id === newColumnId,
         );
         if (targetColumnIndex !== -1) {
           const targetColumn = newColumns[targetColumnIndex];
@@ -76,7 +76,7 @@ export function useBoard(initialBoard?: Board | null) {
     });
 
     try {
-      const result = await updateJobApplication(jobApplicationId, {
+      await updateJobApplication(jobApplicationId, {
         columnId: newColumnId,
         order: newOrder,
       });
