@@ -108,7 +108,7 @@ export async function updateJobApplication(
     order?: number;
     tags?: string[];
     description?: string;
-  }
+  },
 ) {
   const session = await getSession();
 
@@ -206,7 +206,7 @@ export async function updateJobApplication(
 
     const currentJobOrder = jobApplication.order || 0;
     const currentPositionIndex = otherJobsInColumn.findIndex(
-      (job) => job.order > currentJobOrder
+      (job) => job.order > currentJobOrder,
     );
     const oldPositionindex =
       currentPositionIndex === -1
