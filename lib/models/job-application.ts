@@ -82,7 +82,7 @@ const JobApplicationSchema = new Schema<IJobApplication>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default mongoose.models.JobApplication ||

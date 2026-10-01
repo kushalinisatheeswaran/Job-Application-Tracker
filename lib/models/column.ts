@@ -37,7 +37,7 @@ const ColumnSchema = new Schema<IColumn>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default mongoose.models.Column ||
